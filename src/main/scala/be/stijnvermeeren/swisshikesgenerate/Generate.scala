@@ -44,7 +44,14 @@ object Generate {
     }
   }
 
-  def xmlFromDir(yearDir: File, title: String, lineColor: String, lineWidth: Int, maxPointsPerLine: Int): XmlData = {
+  def xmlFromDir(
+    yearDir: File,
+    title: String,
+    summerLineColor: String,
+    winterLineColor: String,
+    lineWidth: Int,
+    maxPointsPerLine: Int
+  ): XmlData = {
     val year = yearDir.getName
     val data = for {
       (name, files) <- yearDir.listFiles.groupBy(_.getName.split("[\\._]").head).toList.sortBy(_._1)
@@ -68,10 +75,16 @@ object Generate {
 
       val fullDescription = (description.toSeq ++ albumsDescription).mkString("<br /><br />")
 
+      val winterKeywords = Set("ski", "winter", "snow", "snowshoe")
+      val isWinter = description.exists(descriptionString => {
+        winterKeywords.exists(descriptionString.toLowerCase.split(" ").contains)
+      })
+      val lineStyle = if (isWinter) "winter" else "summer"
+
       val placemark = <Placemark>
         <name>{title}</name>
         {if (fullDescription.nonEmpty) <description>{fullDescription}</description> else {}}
-        <styleUrl>#lineStyle</styleUrl>
+        <styleUrl>{lineStyle}</styleUrl>
         <LineString>
           <altitudeMode>clampToGround</altitudeMode>
           <extrude>1</extrude>
@@ -86,9 +99,15 @@ object Generate {
     val kml = <kml xmlns="http://www.opengis.net/kml/2.2">
       <Document>
         <name>{title} - {year}</name>
-        <Style id="lineStyle">
+        <Style id="winter">
           <LineStyle>
-            <color>{lineColor}</color>
+            <color>{winterLineColor}</color>
+            <width>{lineWidth}</width>
+          </LineStyle>
+        </Style>
+        <Style id="summer">
+          <LineStyle>
+            <color>{summerLineColor}</color>
             <width>{lineWidth}</width>
           </LineStyle>
         </Style>

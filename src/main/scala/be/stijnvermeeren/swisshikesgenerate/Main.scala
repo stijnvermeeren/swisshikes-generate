@@ -33,7 +33,8 @@ object Main {
     Locale.setDefault(Locale.US)
 
     val title = config.getString("title")
-    val lineColor = config.getString("lineColor")
+    val summerLineColor = config.getString("summerLineColor")
+    val winterLineColor = config.getString("winterLineColor")
     val lineWidth = config.getInt("lineWidth")
     val maxPointsPerLine = config.getInt("maxPointsPerLine")
     val dataRepo = config.getString("dataRepo")
@@ -59,7 +60,14 @@ object Main {
     val printer = new PrettyPrinter(80, 2)
 
     val fileData = tmpDir.listFiles.filter(_.isDirectory).filterNot(_.isHidden).sortBy(_.getName) map { yearDir =>
-      val XmlData(kml, latestDate) = Generate.xmlFromDir(yearDir, title, lineColor, lineWidth, maxPointsPerLine)
+      val XmlData(kml, latestDate) = Generate.xmlFromDir(
+        yearDir,
+        title,
+        summerLineColor = summerLineColor,
+        winterLineColor = winterLineColor,
+        lineWidth = lineWidth,
+        maxPointsPerLine = maxPointsPerLine
+      )
 
       val fileName = s"${yearDir.getName}.kml"
       s3.putObject(

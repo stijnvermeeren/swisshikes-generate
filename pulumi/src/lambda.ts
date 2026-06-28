@@ -61,7 +61,7 @@ const lambdaFunction = new aws.lambda.Function("lambda-swisshikes-generate", {
     s3ObjectVersion: codeJarObject.versionId,
     handler: "be.stijnvermeeren.swisshikesgenerate.Main",
     memorySize: 512,
-    timeout: 100,
+    timeout: 240,
     environment: {
         variables: {
             AWS_BUCKET: dataBucket.id,
