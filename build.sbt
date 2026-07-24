@@ -2,7 +2,7 @@ name := "swisshikes-generate"
 
 version := "1.0"
 
-scalaVersion := "3.2.2"
+scalaVersion := "3.3.4"
 
 libraryDependencies += "org.scala-lang.modules" %% "scala-xml" % "2.1.0"
 libraryDependencies += "com.typesafe" % "config" % "1.4.1"
