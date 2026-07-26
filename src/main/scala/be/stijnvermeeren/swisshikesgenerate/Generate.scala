@@ -79,7 +79,7 @@ object Generate {
         "H" -> "hike",
         "WH" -> "winter hike",
         "R" -> "run",
-        "SS" -> "snow shoe hike",
+        "SS" -> "snowshoe hike",
         "ST" -> "ski tour",
         "M" -> "mountaineering",
         "C" -> "climb",
@@ -87,7 +87,7 @@ object Generate {
       )
 
       val nameParts = fileName.split("_").toList
-      val autoDescription = nameParts(1).split("-").flatMap(forwardTypeMapping.get).mkString(" and ")
+      val autoDescription = nameParts(1).split("-").flatMap(forwardTypeMapping.get).mkString(" and ").capitalize
       val description = fileMetaData.flatMap(_.description) orElse Some(autoDescription) filter (_.nonEmpty)
 
       val title = fileMetaData.flatMap(_.date).getOrElse(nameParts.head)
