@@ -13,5 +13,5 @@ export const codeBucket = new aws.s3.Bucket(
 export const codeJarObject = new aws.s3.BucketObjectv2("codeJar", {
     key: "swisshikes-generate.jar",
     bucket: codeBucket.id,
-    source: new pulumi.asset.FileAsset("../target/scala-3.2.2/swisshikes-generate.jar")
+    source: new pulumi.asset.FileAsset("../target/out/jvm/scala-3.3.4/swisshikes-generate/swisshikes-generate.jar")
 });
