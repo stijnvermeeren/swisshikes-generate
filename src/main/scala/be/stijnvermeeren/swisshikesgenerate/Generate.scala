@@ -16,14 +16,14 @@ import scala.xml.{Elem, PrettyPrinter, XML}
 object Generate {
   final case class MetaData(date: Option[String], description: Option[String], albums: Option[List[String]])
 
-  def findCoordinatesFile(files: Seq[File]): Option[(String, String)] = {
-    files.find(_.getName.endsWith(".coordinates.txt")).map { coordinatesFile =>
+  def parseCoordinatesFile(file: File): Option[(String, String)] = {
+    Option(file).find(_.getName.endsWith(".coordinates.txt")).map { coordinatesFile =>
       (Files.readAllLines(coordinatesFile.toPath).toArray.mkString(" "), coordinatesFile.getName)
     }
   }
 
-  def findGpxFile(files: Seq[File], maxPointsPerLine: Int): Option[(String, String)] = {
-    files.find(_.getName.endsWith(".gpx")).flatMap { file =>
+  def parseGpxFile(file: File, maxPointsPerLine: Int): Option[(String, String)] = {
+    Option(file).find(_.getName.endsWith(".gpx")).flatMap { file =>
       val maxPointsEnforcer = new MaxPointsEnforcer(maxPointsPerLine)
 
       val trackPoints = for (track <- (XML.loadFile(file) \\ "trkseg").headOption) yield {
@@ -70,8 +70,8 @@ object Generate {
     }
 
     val data = for {
-      (name, files) <- yearDir.listFiles.groupBy(_.getName.split("[\\._]").head).toList.sortBy(_._1)
-      (track, fileName) <- findCoordinatesFile(files) orElse findGpxFile(files, maxPointsPerLine)
+      file <- yearDir.listFiles
+      (track, fileName) <- parseCoordinatesFile(file) orElse parseGpxFile(file, maxPointsPerLine)
     } yield {
       val fileMetaData = metaData.get(fileName)
 
