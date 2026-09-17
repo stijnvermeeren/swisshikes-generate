@@ -33,5 +33,7 @@ const bucketPolicy = new aws.s3.BucketPolicy("bucketPolicy", {
                 pulumi.interpolate`${dataBucket.arn}/*`
             ]
         }]
-    }
+    },
+}, {
+    dependsOn: [bucketPublicAccessBlock]
 });
