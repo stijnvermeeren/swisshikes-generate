@@ -74,3 +74,16 @@ export const lambdaFunctionUrl = new aws.lambda.FunctionUrl("lambdaFunctionUrl",
     functionName: lambdaFunction.name,
     authorizationType: "NONE",
 });
+
+new aws.lambda.Permission("lambdaFunctionUrlPublicAccess", {
+    action: "lambda:InvokeFunctionUrl",
+    function: lambdaFunction.name,
+    principal: "*",
+    functionUrlAuthType: "NONE",
+});
+
+new aws.lambda.Permission("lambdaFunctionUrlPublicInvoke", {
+    action: "lambda:InvokeFunction",
+    function: lambdaFunction.name,
+    principal: "*",
+});
